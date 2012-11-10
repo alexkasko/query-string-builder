@@ -40,6 +40,14 @@ may be interesting.
 Library usage
 -------------
 
+Maven dependency (available in central repository):
+
+    <dependency>
+        <groupId>com.alexkasko.springjdbc</groupId>
+        <artifactId>query-string-builder</artifactId>
+        <version>1.0</version>
+    </dependency>
+
 _Note1: this library should **NEVER** be used for concatenating user defined **VALUES**. [Bad things](http://xkcd.com/327/) may happen.
 You should concatenate prepared static string parts containing parameters placeholders (`?` or `:placeholder`) and execute result query
 providing user defined values as parameters to `PreparedStatement`_
@@ -120,3 +128,10 @@ License information
 -------------------
 
 Library is provided under the terms of [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Changelog
+---------
+
+**1.0** (2012-11-09)
+
+ * initial version
