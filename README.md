@@ -4,7 +4,7 @@ Small library for building SQL query strings
 This library allows to build SQL query string programmatically using API calls. It supports conjunctions, disjunctions,
 negations and comma-separated lists.
 
-Library only depends on [commons-lang](http://repo1.maven.org/maven2/commons-lang/commons-lang/).
+Library depends on [commons-lang](http://repo1.maven.org/maven2/commons-lang/commons-lang/).
 
 Library is available in [Maven cental](http://repo1.maven.org/maven2/com/alexkasko/springjdbc/).
 
@@ -127,7 +127,7 @@ you may ignore them in your implementations.
 License information
 -------------------
 
-Library is provided under the terms of [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+This project is released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Changelog
 ---------
