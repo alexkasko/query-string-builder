@@ -31,13 +31,13 @@ public class QueryBuilder {
      * @param template query template
      */
     public QueryBuilder(String template) {
-        if(isBlank(template)) throw new IllegalArgumentException("Provided template is blank");
+        if(isBlank(template)) throw new QueryBuilderException("Provided template is blank");
         this.template = template;
         Matcher m = CLAUSE_PATTERN.matcher(template);
         while (m.find()) {
             String name = m.group(1);
-            if(clauses.containsKey(name)) throw new IllegalArgumentException(
-                    "Duplicate clause: '" + name +"' found in template: '" + template +"'");
+            if(clauses.containsKey(name)) throw new QueryBuilderException(
+                    "Duplicate clause: [" + name +"] found in template: [" + template +"]");
             clauses.put(name, null);
         }
     }
@@ -80,17 +80,17 @@ public class QueryBuilder {
      * @param clauseName clause name
      * @param expr clause expression list
      * @return builder itself
-     * @throws IllegalArgumentException on blank input, on missed clause, on duplicate close
+     * @throws QueryBuilderException on blank input, on missed clause, on duplicate clause
      */
     public QueryBuilder set(String clauseName, ExpressionList expr) {
-        if(isBlank(clauseName)) throw new IllegalArgumentException("Provided clauseName is blank");
-        if(!clauses.containsKey(clauseName)) throw new IllegalArgumentException(
-                "Provided clauseName: '" + clauseName + "' is not found in the template: '" +  template + "'" +
-                " registered clauses: '" + clauses.keySet() + "'" +
+        if(isBlank(clauseName)) throw new QueryBuilderException("Provided clauseName is blank");
+        if(!clauses.containsKey(clauseName)) throw new QueryBuilderException(
+                "Provided clauseName: [" + clauseName + "] is not found in the template: [" +  template + "]" +
+                " registered clauses: [" + clauses.keySet() + "]" +
                 " (clause name must conform this regex: '[a-zA-Z_0-9]+')");
-        if(null != clauses.get(clauseName)) throw new IllegalArgumentException(
-                "Provided clauseName: '" + clauseName + "' was already set to: '" + clauses.get(clauseName) + "'");
-        if(null == expr) throw new IllegalArgumentException("Provided expr is null");
+        if(null != clauses.get(clauseName)) throw new QueryBuilderException(
+                "Provided clauseName: [" + clauseName + "] was already set to: [" + clauses.get(clauseName) + "]");
+        if(null == expr) throw new QueryBuilderException("Provided expr is null");
         clauses.put(clauseName, expr);
         return this;
     }
@@ -104,8 +104,8 @@ public class QueryBuilder {
     public String build() {
         Map<String, String> map = new HashMap<String, String>();
         for(Map.Entry<String, ExpressionList> en : clauses.entrySet()) {
-            if(null == en.getValue()) throw new IllegalStateException(
-                    "Clause: '" + en.getKey() + "' wasn't filled, template: '" + template + "'");
+            if(null == en.getValue()) throw new QueryBuilderException(
+                    "Clause: [" + en.getKey() + "] wasn't filled, template: [" + template + "]");
             map.put(en.getKey(), en.getValue().toString());
         }
         return StrSubstitutor.replace(template, map);

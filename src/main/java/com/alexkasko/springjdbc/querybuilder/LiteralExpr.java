@@ -3,6 +3,8 @@ package com.alexkasko.springjdbc.querybuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 /**
  * Literal expression implementation
  *
@@ -20,6 +22,7 @@ class LiteralExpr extends AbstractExpr {
      * @param literal expression literal
      */
     LiteralExpr(String literal) {
+        if(isBlank(literal)) throw new QueryBuilderException("Provided literal is blank");
         this.literal = literal;
     }
 

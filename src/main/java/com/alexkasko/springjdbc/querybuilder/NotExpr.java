@@ -20,6 +20,7 @@ class NotExpr extends AbstractExpr {
      * @param expr expression
      */
     NotExpr(Expression expr) {
+        if(null == expr) throw new QueryBuilderException("Provided expression is null");
         this.expr = expr;
     }
 

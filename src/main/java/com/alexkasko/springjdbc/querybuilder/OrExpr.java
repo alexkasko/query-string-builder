@@ -12,18 +12,16 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 class OrExpr extends AbstractExpr {
     private static final long serialVersionUID = -944146038841042727L;
 
-    private final Expression left;
-    private final Expression right;
+    private final Expression[] array;
 
     /**
      * Constructor
      *
-     * @param left  left expression in disjunction
-     * @param right right expression in disjunction
+     * @param array array of disjunctions
      */
-    OrExpr(Expression left, Expression right) {
-        this.left = left;
-        this.right = right;
+    OrExpr(Expression[] array) {
+        if(null == array) throw new QueryBuilderException("Provided expressions array is null");
+        this.array = array;
     }
 
     /**
@@ -31,7 +29,21 @@ class OrExpr extends AbstractExpr {
      */
     @Override
     public String toString() {
-        return "((" + left + ") or (" + right + "))";
+        if(0 == array.length) return "";
+        StringBuilder sb = new StringBuilder("(");
+        for(int i = 0; i < array.length - 1; i++) {
+            if(null == array[i]) throw new QueryBuilderException("Provided expression is null, array index: [" + i + "]");
+            sb.append("(");
+            sb.append(array[i]);
+            sb.append(") or ");
+        }
+        // tail
+        int last = array.length-1;
+        if(null == array[last]) throw new QueryBuilderException("Provided expression is null, array index: [" + last + "]");
+        sb.append("(");
+        sb.append(array[last]);
+        sb.append("))");
+        return sb.toString();
     }
 
     /**
@@ -43,8 +55,7 @@ class OrExpr extends AbstractExpr {
         if(o == null || getClass() != o.getClass()) return false;
         OrExpr that = (OrExpr) o;
         return new EqualsBuilder()
-                .append(left, that.left)
-                .append(right, that.right)
+                .append(array, that.array)
                 .isEquals();
     }
 
@@ -54,8 +65,7 @@ class OrExpr extends AbstractExpr {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(left)
-                .append(right)
+                .append(array)
                 .toHashCode();
     }
 }

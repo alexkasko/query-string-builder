@@ -15,6 +15,7 @@ public final class Expressions {
      *
      * @param expr expression literal
      * @return expression list
+     * @throws QueryBuilderException on empty input
      */
     public static ExpressionList list(String expr) {
         return new ExprList(new LiteralExpr(expr));
@@ -25,6 +26,7 @@ public final class Expressions {
      *
      * @param expr expression literal
      * @return expression
+     * @throws QueryBuilderException on empty input
      */
     public static Expression expr(String expr) {
         return new LiteralExpr(expr);
@@ -35,6 +37,7 @@ public final class Expressions {
      *
      * @param expr expression
      * @return negation expression
+     * @throws QueryBuilderException on null input
      */
     public static Expression not(Expression expr) {
         return new NotExpr(expr);
@@ -45,52 +48,20 @@ public final class Expressions {
      *
      * @param expr expression literal
      * @return negation expression
+     * @throws QueryBuilderException on empty input
      */
     public static Expression not(String expr) {
         return new NotExpr(new LiteralExpr(expr));
     }
 
     /**
-     * Creates disjunction expression for two given expressions
+     * Creates disjunction expression for expressions
      *
-     * @param left left expression
-     * @param right right expression
+     * @param exprs expressions for disjunction
      * @return disjunction expression
+     * @throws QueryBuilderException on null input
      */
-    public static Expression or(Expression left, Expression right) {
-        return new OrExpr(left, right);
-    }
-
-    /**
-     * Creates disjunction expression for two given expressions
-     *
-     * @param left left expression literal
-     * @param right right expression
-     * @return disjunction expression
-     */
-    public static Expression or(String left, Expression right) {
-        return new OrExpr(new LiteralExpr(left), right);
-    }
-
-    /**
-     * Creates disjunction expression for two given expressions
-     *
-     * @param left left expression
-     * @param right right expression literal
-     * @return disjunction expression
-     */
-    public static Expression or(Expression left, String right) {
-        return new OrExpr(left, new LiteralExpr(right));
-    }
-
-    /**
-     * Creates disjunction expression for two given expressions literals
-     *
-     * @param left left expression
-     * @param right right expression literal
-     * @return disjunction expression literal
-     */
-    public static Expression or(String left, String right) {
-        return new OrExpr(new LiteralExpr(left), new LiteralExpr(right));
+    public static Expression or(Expression... exprs) {
+        return new OrExpr(exprs);
     }
 }

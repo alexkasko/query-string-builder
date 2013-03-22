@@ -5,6 +5,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.join;
@@ -27,6 +28,7 @@ class ExprList implements ExpressionList, Serializable {
      * @param expr first expression in list
      */
     ExprList(Expression expr) {
+        if(null == expr) throw new QueryBuilderException("Provided expression is null");
         this.conds.add(expr);
     }
 
@@ -35,6 +37,7 @@ class ExprList implements ExpressionList, Serializable {
      */
     @Override
     public ExpressionList comma(Expression expr) {
+        if(null == expr) throw new QueryBuilderException("Provided expression is null");
         this.conds.add(expr);
         return this;
     }
@@ -45,6 +48,19 @@ class ExprList implements ExpressionList, Serializable {
     @Override
     public ExpressionList comma(String expr) {
         return comma(new LiteralExpr(expr));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ExpressionList comma(Collection<Expression> exprs) {
+        if(null == exprs) throw new QueryBuilderException("Provided collection is null");
+        for(Expression ex : exprs) {
+            if(null == ex) throw new QueryBuilderException("Provided expression is null");
+            this.conds.add(ex);
+        }
+        return this;
     }
 
     /**

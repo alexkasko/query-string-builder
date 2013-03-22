@@ -22,6 +22,8 @@ class AndExpr extends AbstractExpr {
      * @param right right expression in conjunction
      */
     AndExpr(Expression left, Expression right) {
+        if(null == left) throw new QueryBuilderException("Provided left expression is null");
+        if(null == right) throw new QueryBuilderException("Provided right expression is null");
         this.left = left;
         this.right = right;
     }

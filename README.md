@@ -17,7 +17,7 @@ Imagine you are developing Java project over relational database and for [some r
 are not using Hibernate/JPA (which are great tools for appropriate tasks). Then some day you'll want to build some
 SQL queries programmatically depending on user input.
 
-Concatenating commas and counting parentheses is not much intresting task so there are [many libraries](http://www.h2database.com/html/jaqu.html#similar_projects)
+Concatenating commas and counting parentheses is not much interesting task so there are [many libraries](http://www.h2database.com/html/jaqu.html#similar_projects)
 that can do it for you. Most of such libraries (I don't pretend to do comprehensive analysis) tend to be the bridge between
 application code and JDBC - kind of lightweight ORM's. They can build SQL queries using API, execute queries and map results for you.
 But if you are not using JPA you are probably already have fine tuned JDBC wrapper for query execution with proper transactions/resources
@@ -27,7 +27,7 @@ You can find SQL builder library that doesn't pretend to be an ORM and just buil
 [this](http://code.google.com/p/squiggle-sql/) or [this](http://openhms.sourceforge.net/sqlbuilder/)). But then you face
 another problem: `select` queries have complex structure ([postges](http://www.postgresql.org/docs/current/static/sql-select.html#AEN77017),
 [oracle](http://docs.oracle.com/cd/B13789_01/server.101/b10759/statements_10002.htm#i2065706)) and are not portable between RDBMSes.
-So libraries trying to build query in typesafe manner need to know all possible query elements and have different dialects
+So libraries trying to build query in type-safe manner need to know all possible query elements and have different dialects
 for different RDBMSes.
 
 But if complex query construction is not the big part of you business logic, then you probably want just to concatenate
@@ -45,7 +45,7 @@ Maven dependency (available in central repository):
     <dependency>
         <groupId>com.alexkasko.springjdbc</groupId>
         <artifactId>query-string-builder</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </dependency>
 
 _Note1: this library should **NEVER** be used for concatenating user defined **VALUES**. [Bad things](http://xkcd.com/327/) may happen.
@@ -105,21 +105,21 @@ Built-in expressions may be created using instance method `and` and static metho
 
  * `expr` - creates new expression from string literal, used to start building, prints to provided literal
  * `and` - returns new conjunction expression, prints to `this_expr and arg_expr`
- * `or` - returns new disjunction expression, prints to `((first_arg_expr) or (second_arg_expr))`
+ * `or` - returns new disjunction expression, prints to `((arg_expr_1) or (arg_expr2) or ... or (arg_expr_N))`
  * `not` - returns new negation expression, prints ti `not (arg_expr)`
 
-All builtin expressions are immutable ans serializable.
+All builtin expressions are immutable and serializable.
 
 ####expression lists
 
-Expression list is designed to be used in `from`, `group by`, `having` contains multiple expressions. `ExpressionList` implementats `comma` method, that allows
+Expression list is designed to be used in `from`, `group by`, `having` contains multiple expressions. `ExpressionList` implements `comma` method, that allows
 to add new expressions to list and returns list itself.
 
-`ExpressionList` is printed to `expr1, expr2, ... exprN`.
+`ExpressionList` is printed to `expr_1, expr_2, ... expr_N`.
 
 ####extending library with new expression
 
-`QueryBuilder` uses only `Expression` and `ExpressionList` interfaces and know nothing about implementations.
+`QueryBuilder` uses only `Expression` and `ExpressionList` interfaces and knows nothing about implementations.
 It also doesn't do any operations on expressions (or lists) besides printing them using `toString` method.
 Methods `add` and `comma` was added directly to interfaces to simplify expressions building -
 you may ignore them in your implementations.
@@ -131,6 +131,11 @@ This project is released under the [Apache License 2.0](http://www.apache.org/li
 
 Changelog
 ---------
+
+**1.1** (2013-03-21)
+
+ * vararg disjunctions
+ * null input validation
 
 **1.0** (2012-11-09)
 

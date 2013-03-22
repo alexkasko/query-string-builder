@@ -1,5 +1,7 @@
 package com.alexkasko.springjdbc.querybuilder;
 
+import java.util.Collection;
+
 /**
  * Interface for expression lists. List is joined from expressions with commas.
  * List is printed to output using {@link #toString()} method.
@@ -23,4 +25,12 @@ public interface ExpressionList {
      * @return list itself
      */
     ExpressionList comma(String expr);
+
+    /**
+     * Adds expressions collection to list
+     *
+     * @param exprs expressions collection
+     * @return list itself
+     */
+    ExpressionList comma(Collection<Expression> exprs);
 }
