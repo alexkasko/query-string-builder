@@ -34,13 +34,13 @@
 <FONT color="green">031</FONT>         * @param template query template<a name="line.31"></a>
 <FONT color="green">032</FONT>         */<a name="line.32"></a>
 <FONT color="green">033</FONT>        public QueryBuilder(String template) {<a name="line.33"></a>
-<FONT color="green">034</FONT>            if(isBlank(template)) throw new IllegalArgumentException("Provided template is blank");<a name="line.34"></a>
+<FONT color="green">034</FONT>            if(isBlank(template)) throw new QueryBuilderException("Provided template is blank");<a name="line.34"></a>
 <FONT color="green">035</FONT>            this.template = template;<a name="line.35"></a>
 <FONT color="green">036</FONT>            Matcher m = CLAUSE_PATTERN.matcher(template);<a name="line.36"></a>
 <FONT color="green">037</FONT>            while (m.find()) {<a name="line.37"></a>
 <FONT color="green">038</FONT>                String name = m.group(1);<a name="line.38"></a>
-<FONT color="green">039</FONT>                if(clauses.containsKey(name)) throw new IllegalArgumentException(<a name="line.39"></a>
-<FONT color="green">040</FONT>                        "Duplicate clause: '" + name +"' found in template: '" + template +"'");<a name="line.40"></a>
+<FONT color="green">039</FONT>                if(clauses.containsKey(name)) throw new QueryBuilderException(<a name="line.39"></a>
+<FONT color="green">040</FONT>                        "Duplicate clause: [" + name +"] found in template: [" + template +"]");<a name="line.40"></a>
 <FONT color="green">041</FONT>                clauses.put(name, null);<a name="line.41"></a>
 <FONT color="green">042</FONT>            }<a name="line.42"></a>
 <FONT color="green">043</FONT>        }<a name="line.43"></a>
@@ -83,17 +83,17 @@
 <FONT color="green">080</FONT>         * @param clauseName clause name<a name="line.80"></a>
 <FONT color="green">081</FONT>         * @param expr clause expression list<a name="line.81"></a>
 <FONT color="green">082</FONT>         * @return builder itself<a name="line.82"></a>
-<FONT color="green">083</FONT>         * @throws IllegalArgumentException on blank input, on missed clause, on duplicate close<a name="line.83"></a>
+<FONT color="green">083</FONT>         * @throws QueryBuilderException on blank input, on missed clause, on duplicate clause<a name="line.83"></a>
 <FONT color="green">084</FONT>         */<a name="line.84"></a>
 <FONT color="green">085</FONT>        public QueryBuilder set(String clauseName, ExpressionList expr) {<a name="line.85"></a>
-<FONT color="green">086</FONT>            if(isBlank(clauseName)) throw new IllegalArgumentException("Provided clauseName is blank");<a name="line.86"></a>
-<FONT color="green">087</FONT>            if(!clauses.containsKey(clauseName)) throw new IllegalArgumentException(<a name="line.87"></a>
-<FONT color="green">088</FONT>                    "Provided clauseName: '" + clauseName + "' is not found in the template: '" +  template + "'" +<a name="line.88"></a>
-<FONT color="green">089</FONT>                    " registered clauses: '" + clauses.keySet() + "'" +<a name="line.89"></a>
+<FONT color="green">086</FONT>            if(isBlank(clauseName)) throw new QueryBuilderException("Provided clauseName is blank");<a name="line.86"></a>
+<FONT color="green">087</FONT>            if(!clauses.containsKey(clauseName)) throw new QueryBuilderException(<a name="line.87"></a>
+<FONT color="green">088</FONT>                    "Provided clauseName: [" + clauseName + "] is not found in the template: [" +  template + "]" +<a name="line.88"></a>
+<FONT color="green">089</FONT>                    " registered clauses: [" + clauses.keySet() + "]" +<a name="line.89"></a>
 <FONT color="green">090</FONT>                    " (clause name must conform this regex: '[a-zA-Z_0-9]+')");<a name="line.90"></a>
-<FONT color="green">091</FONT>            if(null != clauses.get(clauseName)) throw new IllegalArgumentException(<a name="line.91"></a>
-<FONT color="green">092</FONT>                    "Provided clauseName: '" + clauseName + "' was already set to: '" + clauses.get(clauseName) + "'");<a name="line.92"></a>
-<FONT color="green">093</FONT>            if(null == expr) throw new IllegalArgumentException("Provided expr is null");<a name="line.93"></a>
+<FONT color="green">091</FONT>            if(null != clauses.get(clauseName)) throw new QueryBuilderException(<a name="line.91"></a>
+<FONT color="green">092</FONT>                    "Provided clauseName: [" + clauseName + "] was already set to: [" + clauses.get(clauseName) + "]");<a name="line.92"></a>
+<FONT color="green">093</FONT>            if(null == expr) throw new QueryBuilderException("Provided expr is null");<a name="line.93"></a>
 <FONT color="green">094</FONT>            clauses.put(clauseName, expr);<a name="line.94"></a>
 <FONT color="green">095</FONT>            return this;<a name="line.95"></a>
 <FONT color="green">096</FONT>        }<a name="line.96"></a>
@@ -107,8 +107,8 @@
 <FONT color="green">104</FONT>        public String build() {<a name="line.104"></a>
 <FONT color="green">105</FONT>            Map&lt;String, String&gt; map = new HashMap&lt;String, String&gt;();<a name="line.105"></a>
 <FONT color="green">106</FONT>            for(Map.Entry&lt;String, ExpressionList&gt; en : clauses.entrySet()) {<a name="line.106"></a>
-<FONT color="green">107</FONT>                if(null == en.getValue()) throw new IllegalStateException(<a name="line.107"></a>
-<FONT color="green">108</FONT>                        "Clause: '" + en.getKey() + "' wasn't filled, template: '" + template + "'");<a name="line.108"></a>
+<FONT color="green">107</FONT>                if(null == en.getValue()) throw new QueryBuilderException(<a name="line.107"></a>
+<FONT color="green">108</FONT>                        "Clause: [" + en.getKey() + "] wasn't filled, template: [" + template + "]");<a name="line.108"></a>
 <FONT color="green">109</FONT>                map.put(en.getKey(), en.getValue().toString());<a name="line.109"></a>
 <FONT color="green">110</FONT>            }<a name="line.110"></a>
 <FONT color="green">111</FONT>            return StrSubstitutor.replace(template, map);<a name="line.111"></a>
