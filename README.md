@@ -27,7 +27,7 @@ You can find SQL builder library that doesn't pretend to be an ORM and just buil
 [this](http://code.google.com/p/squiggle-sql/) or [this](http://openhms.sourceforge.net/sqlbuilder/)). But then you face
 another problem: `select` queries have complex structure ([postges](http://www.postgresql.org/docs/current/static/sql-select.html#AEN77017),
 [oracle](http://docs.oracle.com/cd/B13789_01/server.101/b10759/statements_10002.htm#i2065706)) and are not portable between RDBMSes.
-So libraries trying to build query in type-safe manner need to know all possible query elements and have different dialects
+So libraries trying to build query in type-safe manner need to know all possible query elements and support different dialects
 for different RDBMSes.
 
 But if complex query construction is not the big part of you business logic, then you probably want just to concatenate
@@ -45,7 +45,7 @@ Maven dependency (available in central repository):
     <dependency>
         <groupId>com.alexkasko.springjdbc</groupId>
         <artifactId>query-string-builder</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </dependency>
 
 _Note1: this library should **NEVER** be used for concatenating user defined **VALUES**. [Bad things](http://xkcd.com/327/) may happen.
@@ -64,15 +64,18 @@ expressions (or expression lists) and provide them to builder to fill template p
     // query template, probably loaded from external file
     String template = "select emp.* from employee emp" +
                         " join departments dep on emp.id_department = dep.id" +
-                        " where ${where} and status != 'ARCHIVED" +
-                        " order by ${order} limit :limit offset :offset";
+                        " ${where}" +
+                        " ${order}" +
+                        " limit :limit offset :offset";
     // create "where" clause
-    Expression where = expr("emp.surname = :surname")
+    Expression where = Expressions.where()
+            .and("emp.surname = :surname")
             .and("emp.name like :name")
             .and(or(expr("emp.salary > :salary").and("emp.position in (:positionList)"),
-                not("emp.age > :ageThreshold")));
+                    not("emp.age > :ageThreshold")))
+            .and("status != 'ARCHIVED'");
     // create "order" clause
-    ExpressionList order = list("dep.id desc").comma("cust.salary");
+    ExpressionList order = Expressions.orderBy().add("dep.id desc").add("cust.salary");
     // create builder from template and fill clauses
     String sql = QueryBuilder.query(template)
             .set("where", where)
@@ -104,9 +107,12 @@ to allow easy method chaining. Expressions are printed to SQL using `toString` m
 Built-in expressions may be created using instance method `and` and static methods of `Expressions` class:
 
  * `expr` - creates new expression from string literal, used to start building, prints to provided literal
- * `and` - returns new conjunction expression, prints to `this_expr and arg_expr`
- * `or` - returns new disjunction expression, prints to `((arg_expr_1) or (arg_expr2) or ... or (arg_expr_N))`
- * `not` - returns new negation expression, prints ti `not (arg_expr)`
+ * `and` - creates new conjunction expression, prints to `this_expr and arg_expr`
+ * `or` - creates new disjunction expression, prints to `((arg_expr_1) or (arg_expr2) or ... or (arg_expr_N))`
+ * `not` - creates new negation expression, prints ti `not (arg_expr)`
+ * `prefix` (and included prefix types `where` and `and`) - creates new prefix expression,
+   prefix will be printed only if this expression will be conjuncted with other expressions,
+   empty string will be printed otherwise
 
 All builtin expressions are immutable and serializable.
 
@@ -117,11 +123,14 @@ to add new expressions to list and returns list itself.
 
 `ExpressionList` is printed to `expr_1, expr_2, ... expr_N`.
 
+Expression lists also may have prefixes (`listWithPrefix` and `orderBy` methods), prefix will be printed
+before non empty conditions list and will be omitted if conditions list is empty.
+
 ####extending library with new expression
 
 `QueryBuilder` uses only `Expression` and `ExpressionList` interfaces and knows nothing about implementations.
 It also doesn't do any operations on expressions (or lists) besides printing them using `toString` method.
-Methods `add` and `comma` was added directly to interfaces to simplify expressions building -
+Methods `and` and `add` was added directly to interfaces to simplify expressions building -
 you may ignore them in your implementations.
 
 License information
@@ -131,6 +140,11 @@ This project is released under the [Apache License 2.0](http://www.apache.org/li
 
 Changelog
 ---------
+
+**1.2** (2013-05-09)
+
+ * prefix support for expressions and lists
+ * list methods renamed from `comma` to `and`
 
 **1.1** (2013-03-21)
 

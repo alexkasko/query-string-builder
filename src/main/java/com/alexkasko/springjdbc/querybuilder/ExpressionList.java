@@ -16,7 +16,7 @@ public interface ExpressionList {
      * @param expr expression
      * @return list itself
      */
-    ExpressionList comma(Expression expr);
+    ExpressionList add(Expression expr);
 
     /**
      * Adds expression to list
@@ -24,7 +24,7 @@ public interface ExpressionList {
      * @param expr expression literal
      * @return list itself
      */
-    ExpressionList comma(String expr);
+    ExpressionList add(String expr);
 
     /**
      * Adds expressions collection to list
@@ -32,5 +32,5 @@ public interface ExpressionList {
      * @param exprs expressions collection
      * @return list itself
      */
-    ExpressionList comma(Collection<Expression> exprs);
+    ExpressionList add(Collection<Expression> exprs);
 }

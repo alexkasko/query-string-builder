@@ -71,7 +71,7 @@ public class QueryBuilder {
      * @return builder itself
      */
     public QueryBuilder set(String clauseName, Expression expr) {
-        return set(clauseName, new ExprList(expr));
+        return set(clauseName, new ExprList().add(expr));
     }
 
     /**

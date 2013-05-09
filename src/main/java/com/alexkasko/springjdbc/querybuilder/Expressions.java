@@ -11,14 +11,33 @@ public final class Expressions {
     private Expressions() { }
 
     /**
-     * Creates expression list from string literal
+     * Creates expression list
      *
-     * @param expr expression literal
      * @return expression list
-     * @throws QueryBuilderException on empty input
      */
-    public static ExpressionList list(String expr) {
-        return new ExprList(new LiteralExpr(expr));
+    public static ExpressionList list() {
+        return new ExprList();
+    }
+
+    /**
+     * Creates expression list with prefix literal,
+     * that will be printed only if condition list is not empty
+     *
+     * @param prefix list prefix literal
+     * @return expression list
+     */
+    public static ExpressionList listWithPrefix(String prefix) {
+        return new ExprList(prefix);
+    }
+
+    /**
+     * Creates expression list with {@code "order by"} prefix,
+     * that will be printed only if condition list is not empty
+     *
+     * @return expression list
+     */
+    public static ExpressionList orderBy() {
+        return new ExprList("order by");
     }
 
     /**
@@ -63,5 +82,40 @@ public final class Expressions {
      */
     public static Expression or(Expression... exprs) {
         return new OrExpr(exprs);
+    }
+
+    /**
+     * Creates prefix expression, prefix will be printed
+     * only if this expression will be conjuncted with other expressions,
+     * empty string will be printed otherwise
+     *
+     * @param prefix prefix literal
+     * @return prefix expression
+     * @throws QueryBuilderException on empty input
+     */
+    public static Expression prefix(String prefix) {
+        return  new PrefixExpr(prefix);
+    }
+
+    /**
+     * Creates prefix expression with {@code "where"} prefix, that
+     * will be printed only if this expression will be conjuncted with other expressions,
+     * empty string will be printed otherwise
+     *
+     * @return prefix expression with {@code "where"} prefix
+     */
+    public static Expression where() {
+        return new PrefixExpr("where");
+    }
+
+    /**
+     * Creates prefix expression with {@code "and"} prefix, that
+     * will be printed only if this expression will be conjuncted with other expressions,
+     * empty string will be printed otherwise
+     *
+     * @return prefix expression with {@code "and"} prefix
+     */
+    public static Expression and() {
+        return new PrefixExpr("and");
     }
 }
