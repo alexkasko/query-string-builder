@@ -74,7 +74,7 @@
 <FONT color="green">071</FONT>         * @return builder itself<a name="line.71"></a>
 <FONT color="green">072</FONT>         */<a name="line.72"></a>
 <FONT color="green">073</FONT>        public QueryBuilder set(String clauseName, Expression expr) {<a name="line.73"></a>
-<FONT color="green">074</FONT>            return set(clauseName, new ExprList(expr));<a name="line.74"></a>
+<FONT color="green">074</FONT>            return set(clauseName, new ExprList().add(expr));<a name="line.74"></a>
 <FONT color="green">075</FONT>        }<a name="line.75"></a>
 <FONT color="green">076</FONT>    <a name="line.76"></a>
 <FONT color="green">077</FONT>        /**<a name="line.77"></a>
